@@ -20,7 +20,6 @@ app.use('/', (req, res, next) => {
 const {userRouter} = require('./routes/user')
 const {profileRouter} = require('./routes/profile')
 
-
 app.use('/user', userRouter);
 app.use('/profile', profileRouter);
 
