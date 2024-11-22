@@ -10,7 +10,7 @@
 3. /profile/view done
 
 3. /user/purchase/:courseId  //done
-4. /user/courses  
+4. /user/courses  // done
 
 
 
@@ -19,7 +19,9 @@
 POST /admin/signup: To register an admin. // done
 POST /admin/login: To authenticate an admin. // done
 
+
 POST  /admin/myCourses
-POST /admin/courses: To create a new course 
+POST /admin/addcourse: To create a new course // done
 DELETE /admin/courses/:courseId: 
 POST /admin/courses/:courseId/content: To add content to a specific course 
+
