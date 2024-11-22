@@ -1,11 +1,20 @@
 const mongoose = require('mongoose');
-const validator = require('validator')
+const validator = require('validator');
+const jwt = require('jsonwebtoken')
+const dotenv = require('dotenv');
+dotenv.config();
 
 const adminSchema = mongoose.Schema({
     name : {
         type : String,
         required : true,
         trim : true,
+    },
+    about : {
+        type : String,
+        required : true,
+        trim : true,
+        maxLength : 30,
     },
     emailId : {
         type : String,
@@ -44,7 +53,12 @@ const adminSchema = mongoose.Schema({
             if(!validator.isURL(value)) {
                 throw new Error("Invalid profile picture url");
             }
-        }
+        },
+        default : "https://static.vecteezy.com/system/resources/previews/020/765/399/non_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg",
+    },
+    courses: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Course'  
     },
     lastLogin: {
         type: Date,
@@ -57,14 +71,18 @@ const adminSchema = mongoose.Schema({
     timestamps : true
 })
 
+adminSchema.index({emailId : 1}, {phoneNumber : 1});
 
-// const jwt_secret_key_admin = process.env.JWT_SECRET_KEY_ADMIN;
+const jwt_secret_key_admin = process.env.JWT_SECRET_KEY_2;
 
-// userSchema.methods.getJWT = async function() {
-//     const user = this;
-//     const token = jwt.sign({_id : user._id}, jwt_secret_key_admin, {expiresIn : '7d'})
-//     return token;
-// }
+adminSchema.methods.getJWT = async function() {
+    const admin = this;
+    const token = jwt.sign(
+        {_id : admin._id, emailId: admin.emailId }, jwt_secret_key_admin, 
+        {expiresIn : '1d'}
+    );
+    return token;
+}
 
 
 const adminModel = new mongoose.model('Admin', adminSchema);

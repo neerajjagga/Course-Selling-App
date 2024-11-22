@@ -17,12 +17,15 @@ app.use('/', (req, res, next) => {
     next();
 })
 
+const {homeRouter} = require('./routes/home')
 const {userRouter} = require('./routes/user')
 const {profileRouter} = require('./routes/profile')
+const {adminRouter} = require('./routes/admin')
 
+app.use('/', homeRouter)
 app.use('/user', userRouter);
 app.use('/profile', profileRouter);
-
+app.use('/admin', adminRouter);
 
 connectDB().then(() => {
     console.log(`Database connected successfully`);

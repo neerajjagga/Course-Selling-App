@@ -1,4 +1,5 @@
 const {userModel} = require('../models/user');
+const {myCoursesModel} = require('../models/myCourses');
 const {validateSignupData, validateLoginData} = require('../utils/validation');
 const bcrypt = require('bcrypt');
 
@@ -48,7 +49,7 @@ const loginUser = async (req, res) => {
         console.log(user);
         if(!user) {
             return res.status(400).json({
-                message : `Invalid credentials`
+                message : `User not found`
             })
         }
         // check if password is correct
@@ -74,7 +75,50 @@ const loginUser = async (req, res) => {
     }
 }
 
+const purchaseCourse = async(req, res) => {
+    try {
+        const courseId = req.params.courseId;
+
+        const loggedInUser = req.user;
+        console.log(loggedInUser._id);
+        
+        const userId = loggedInUser._id.toString();
+        console.log(typeof userId);
+        
+        const findIfUserPurschaseACourseBefore = await myCoursesModel.findOne({fromUserId : loggedInUser._id});
+
+        if(!findIfUserPurschaseACourseBefore) {
+            const purchaseCourse = new myCoursesModel({
+                fromUserId : userId,
+                myCourses : courseId
+            })
+    
+            await purchaseCourse.save();
+    
+            res.status(400).json({
+                message : "Course purchased successfully"
+            })
+        }
+        else {            
+            findIfUserPurschaseACourseBefore.myCourses.push(courseId);
+            
+            const updateMyCourses = await myCoursesModel.findOneAndUpdate({fromUserId : userId}, findIfUserPurschaseACourseBefore,
+            {new : true});
+            
+            res.status(400).json({
+                message : "Course purchased successfully"
+            })
+        }
+    } catch (error) {
+        res.status(400).json({
+            message : "Error is coming while purchasing course",
+            Error : error.message
+        })
+    }
+}
+
 module.exports = {
     createUser,
-    loginUser
+    loginUser,
+    purchaseCourse
 }
