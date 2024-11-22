@@ -9,7 +9,7 @@
 2. /user/login  done
 3. /profile/view done
 
-3. /user/purchase/:courseId  
+3. /user/purchase/:courseId  //done
 4. /user/courses  
 
 

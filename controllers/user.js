@@ -3,7 +3,6 @@ const { myCoursesModel } = require('../models/myCourses');
 const { validateSignupData, validateLoginData, validateCourseId } = require('../utils/validation');
 const bcrypt = require('bcrypt');
 
-
 const createUser = async (req, res) => {
     try {
         validateSignupData(req);
@@ -82,8 +81,6 @@ const purchaseCourse = async (req, res) => {
         validateCourseId(courseId);
 
         const loggedInUser = req.user;
-        console.log(loggedInUser._id);
-
         const userId = loggedInUser._id.toString();
 
         const userCourses = await myCoursesModel.findOne({ fromUserId: loggedInUser._id });
@@ -96,7 +93,7 @@ const purchaseCourse = async (req, res) => {
 
             await purchaseCourse.save();
 
-            res.status(201).json({
+            return res.status(201).json({
                 message: "Course purchased successfully"
             })
         }
@@ -121,8 +118,48 @@ const purchaseCourse = async (req, res) => {
     }
 }
 
+const getMyPurchasedCourses = async(req, res) => {
+    try {
+        const COURSE_SAFE_DATA = "name description content author -_id"; 
+        const AUTHOR_SAFE_DATA = "name about profilePicUrl -_id";
+        
+        const loggedInUser = req.user;  
+        const myCourses = await myCoursesModel
+            .findOne({ fromUserId: loggedInUser._id })
+            .populate({
+                path : 'myCourses',
+                select : COURSE_SAFE_DATA,
+                populate : {
+                    path : 'author',
+                    select : AUTHOR_SAFE_DATA
+                },
+            })
+            .exec()
+
+            if(!myCourses) {
+                return res.status(200).json({
+                    message : "You havn't purchased any course"
+                })
+            }
+
+            res.status(200).json({
+                myCourses : myCourses.myCourses
+            })
+        
+        if(myCourses.length === 0) {
+            res.status(400).json({
+                message : "No course found -> Purchase now"
+            })
+        }
+
+    } catch (error) {
+        
+    }
+}
+
 module.exports = {
     createUser,
     loginUser,
-    purchaseCourse
+    purchaseCourse,
+    getMyPurchasedCourses
 }
