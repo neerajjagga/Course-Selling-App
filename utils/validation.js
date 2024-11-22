@@ -1,3 +1,4 @@
+const {courseModel} = require('../models/course')
 const validator = require('validator');
 
 function validateSignupData(req) {
@@ -28,7 +29,16 @@ function validateLoginData(req) {
     }
 }
 
+const validateCourseId = async(courseId) => {
+    const isCourseIdValid = await courseModel.findOne({_id : courseId});
+    
+    if(!isCourseIdValid) {
+        throw new Error("No course found");
+    }
+} 
+
 module.exports = {
     validateSignupData,
-    validateLoginData
+    validateLoginData,
+    validateCourseId
 }
