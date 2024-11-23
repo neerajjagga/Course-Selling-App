@@ -93,6 +93,9 @@ const createCourse = async (req, res) => {
         });
 
         await course.save();
+
+        // push courseId into the admin courses field
+
         res.status(200).json({
             message : "Course added succcessfully"
         })
@@ -105,8 +108,64 @@ const createCourse = async (req, res) => {
     }
 }
 
+const showMyCourses = async(req, res) => {
+    try {
+        const loggedInAdmin = req.admin;
+        const COURSE_SAFE_DATA = "name description price content  -_id"
+
+        const allAdminCourses = await courseModel.find({fromAdminId : loggedInAdmin._id})
+        .select( COURSE_SAFE_DATA)
+        
+        if(allAdminCourses.length === 0) {
+            return res.status(300).json({
+                message : "You have no courses yet. Add now"
+            })
+        }
+
+        res.status(200).json({
+            allCourses : allAdminCourses
+        })
+
+    } catch (error) {
+        res.status(400).json({
+            message : "Error coming" + error.mesage
+        })
+    }
+}
+
+const addContent = async(req, res) => {
+    try {
+        const loggedInAdmin = req.admin;
+        const courseId = req.params.courseId;
+        const contentUrl = req.query.contentUrl;
+
+        // first ccourse is available of the admin
+        const course = await courseModel.findOne({_id : courseId, fromAdminId : loggedInAdmin._id});
+
+        if(!course) {
+            return res.status(400).json({
+                message : "Cannot find course"
+            })
+        }
+
+        course.content.push(contentUrl);
+        await course.save();
+        
+        res.status(201).json({
+            message : "Content added successfully"
+        })
+
+    } catch (error) {
+        res.status(400).json({
+            Error : "Error coming " + error.message
+        })
+    }
+}
+
 module.exports = {
     createAdmin,
     loginAdmin,
-    createCourse
+    createCourse,
+    showMyCourses,
+    addContent
 }

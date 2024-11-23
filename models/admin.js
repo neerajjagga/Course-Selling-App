@@ -56,16 +56,6 @@ const adminSchema = mongoose.Schema({
         },
         default : "https://static.vecteezy.com/system/resources/previews/020/765/399/non_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg",
     },
-    courses: [{
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Course'
-    }],
-    lastLogin: {
-        type: Date,
-    },
-    loginHistory: {
-        type: [Date], // Array of login timestamps
-    },
 },
 {
     timestamps : true
