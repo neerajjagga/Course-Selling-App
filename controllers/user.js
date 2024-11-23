@@ -1,5 +1,5 @@
 const { userModel } = require('../models/user');
-const { myCoursesModel } = require('../models/myCourses');
+const { purchaseModel } = require('../models/purchase');
 const { validateSignupData, validateLoginData, validateCourseId } = require('../utils/validation');
 const bcrypt = require('bcrypt');
 
@@ -83,10 +83,10 @@ const purchaseCourse = async (req, res) => {
         const loggedInUser = req.user;
         const userId = loggedInUser._id.toString();
 
-        const userCourses = await myCoursesModel.findOne({ fromUserId: loggedInUser._id });
+        const userCourses = await purchaseModel.findOne({ fromUserId: loggedInUser._id });
 
         if (!userCourses) {
-            const purchaseCourse = new myCoursesModel({
+            const purchaseCourse = new purchaseModel({
                 fromUserId: userId,
                 myCourses: [courseId]
             })
@@ -124,7 +124,7 @@ const getMyPurchasedCourses = async(req, res) => {
         const AUTHOR_SAFE_DATA = "name about profilePicUrl -_id";
         
         const loggedInUser = req.user;  
-        const myCourses = await myCoursesModel
+        const myCourses = await purchaseModel
             .findOne({ fromUserId: loggedInUser._id })
             .populate({
                 path : 'myCourses',

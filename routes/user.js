@@ -6,6 +6,6 @@ const userRouter = express.Router();
 userRouter.post('/signup', createUser);
 userRouter.post('/login', loginUser);
 userRouter.post('/purchase/:courseId', userAuth, purchaseCourse);
-userRouter.get('/courses', userAuth, getMyPurchasedCourses);
+userRouter.get('/dashboard', userAuth, getMyPurchasedCourses);
 
 module.exports = {userRouter}

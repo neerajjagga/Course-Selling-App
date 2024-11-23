@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const myCoursesSchema = mongoose.Schema({
+const purchaseSchema = mongoose.Schema({
     fromUserId : {
         type: mongoose.Schema.Types.ObjectId, 
         ref : 'User'
@@ -16,6 +16,6 @@ const myCoursesSchema = mongoose.Schema({
     timestamps : true
 })
 
-const myCoursesModel = mongoose.model('MyCourses', myCoursesSchema);
+const purchaseModel = mongoose.model('Purchase', purchaseSchema);
 
-module.exports = {myCoursesModel}
+module.exports = {purchaseModel}
