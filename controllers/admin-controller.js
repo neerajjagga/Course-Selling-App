@@ -1,6 +1,6 @@
-const {adminModel} = require('../models/admin')
-const {courseModel} = require('../models/course')
-const {validateCourseData} = require('../utils/validateCourseData')
+const {adminModel} = require('../models/admin-model')
+const {courseModel} = require('../models/course-model')
+const {validateCourseData} = require('../utils/validation')
 const bcrypt = require('bcrypt');
 
 

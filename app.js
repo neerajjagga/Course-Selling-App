@@ -17,10 +17,10 @@ app.use('/', (req, res, next) => {
     next();
 })
 
-const {homeRouter} = require('./routes/home')
-const {userRouter} = require('./routes/user')
-const {profileRouter} = require('./routes/profile')
-const {adminRouter} = require('./routes/admin')
+const {homeRouter} = require('./routes/home-router')
+const {userRouter} = require('./routes/user-router')
+const {profileRouter} = require('./routes/profile-router')
+const {adminRouter} = require('./routes/admin-router')
 
 app.use('/', homeRouter)
 app.use('/user', userRouter);

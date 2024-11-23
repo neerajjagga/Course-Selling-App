@@ -1,5 +1,5 @@
 const express = require('express');
-const {seeAllCourses} = require('../controllers/home')
+const {seeAllCourses} = require('../controllers/home-controller')
 const homeRouter = express.Router();
 
 

@@ -1,5 +1,5 @@
-const { userModel } = require('../models/user');
-const { purchaseModel } = require('../models/purchase');
+const { userModel } = require('../models/user-model');
+const { purchaseModel } = require('../models/purchase-model');
 const { validateSignupData, validateLoginData, validateCourseId } = require('../utils/validation');
 const bcrypt = require('bcrypt');
 
