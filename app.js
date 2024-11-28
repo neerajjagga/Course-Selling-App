@@ -10,6 +10,16 @@ app.use(cookieParser());
 dotenv.config();
 const PORT = process.env.PORT || 3000;
 
+
+connectDB().then(() => {
+    console.log(`Database connected successfully`);
+    app.listen(PORT , () => {
+    console.log(`Server is listening on port ${PORT}`);
+})
+}).catch(error => {
+    console.log(`Error while connecting to database ${error}`);
+})
+
 // request log middleware
 app.use('/', (req, res, next) => {
     const date = new Date();
@@ -26,12 +36,3 @@ app.use('/', homeRouter)
 app.use('/user', userRouter);
 app.use('/profile', profileRouter);
 app.use('/admin', adminRouter);
-
-connectDB().then(() => {
-    console.log(`Database connected successfully`);
-    app.listen(PORT , () => {
-    console.log(`Server is listening on port ${PORT}`);
-})
-}).catch(error => {
-    console.log(`Error while connecting to database ${error}`);
-})
