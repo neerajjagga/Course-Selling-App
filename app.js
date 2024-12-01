@@ -1,10 +1,19 @@
 const express = require('express');
 const {connectDB} = require('./config/db')
+const {rateLimit} = require('express-rate-limit'); 
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
 const app = express();
 
+const limiter = rateLimit({
+    windowMs : 15 * 60 * 1000,
+    limit: 10,
+	standardHeaders: 'draft-7', 
+	legacyHeaders: false, 
+})
+
+app.use(limiter);
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(cookieParser());
@@ -12,22 +21,12 @@ app.use(cookieParser());
 dotenv.config();
 const PORT = process.env.PORT || 3000;
 
-
-connectDB().then(() => {
-    console.log(`Database connected successfully`);
-    app.listen(PORT , () => {
-    console.log(`Server is listening on port ${PORT}`);
-})
-}).catch(error => {
-    console.log(`Error while connecting to database ${error}`);
-})
-
 // request log middleware
-// app.use('/', (req, res, next) => {
-//     const date = new Date();
-//     console.log(`Request log for url : ${req.url} method : ${req.method} at ${date.toLocaleString()}`);
-//     next();
-// })
+app.use('/', (req, res, next) => {
+    const date = new Date();
+    console.log(`Request log for url : ${req.url} method : ${req.method} at ${date.toLocaleString()}`);
+    next();
+})
 
 const {homeRouter} = require('./routes/home-router')
 const {userRouter} = require('./routes/user-router')
@@ -38,3 +37,13 @@ app.use('/', homeRouter)
 app.use('/user', userRouter);
 app.use('/profile', profileRouter);
 app.use('/admin', adminRouter);
+
+
+connectDB().then(() => {
+    console.log(`Database connected successfully`);
+    app.listen(PORT , () => {
+    console.log(`Server is listening on port ${PORT}`);
+})
+}).catch(error => {
+    console.log(`Error while connecting to database ${error}`);
+})
