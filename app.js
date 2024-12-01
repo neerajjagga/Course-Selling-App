@@ -14,9 +14,13 @@ const {adminRouter} = require('./routes/admin-router')
 
 const limiter = rateLimit({
     windowMs : 15 * 60 * 1000,
-    limit: 10,
+    limit: 100,
 	standardHeaders: 'draft-7', 
-	legacyHeaders: false, 
+	legacyHeaders: false,
+    message : {
+        code : 429,
+        message : "Too many requests, try again later"
+    } 
 })
 
 app.use(limiter);
