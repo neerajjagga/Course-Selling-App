@@ -1,9 +1,11 @@
 const express = require('express');
 const {connectDB} = require('./config/db')
 const cookieParser = require('cookie-parser');
+const morgan = require('morgan');
 const dotenv = require('dotenv');
 const app = express();
 
+app.use(morgan('dev'));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -21,11 +23,11 @@ connectDB().then(() => {
 })
 
 // request log middleware
-app.use('/', (req, res, next) => {
-    const date = new Date();
-    console.log(`Request log for url : $${req.url} method : ${req.method} at ${date.toLocaleString()}`);
-    next();
-})
+// app.use('/', (req, res, next) => {
+//     const date = new Date();
+//     console.log(`Request log for url : ${req.url} method : ${req.method} at ${date.toLocaleString()}`);
+//     next();
+// })
 
 const {homeRouter} = require('./routes/home-router')
 const {userRouter} = require('./routes/user-router')
