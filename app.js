@@ -1,10 +1,16 @@
 const express = require('express');
 const {connectDB} = require('./config/db')
 const {rateLimit} = require('express-rate-limit'); 
+const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
 const app = express();
+
+const {homeRouter} = require('./routes/home-router')
+const {userRouter} = require('./routes/user-router')
+const {profileRouter} = require('./routes/profile-router')
+const {adminRouter} = require('./routes/admin-router')
 
 const limiter = rateLimit({
     windowMs : 15 * 60 * 1000,
@@ -14,6 +20,7 @@ const limiter = rateLimit({
 })
 
 app.use(limiter);
+app.use(helmet());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(cookieParser());
@@ -27,11 +34,6 @@ app.use('/', (req, res, next) => {
     console.log(`Request log for url : ${req.url} method : ${req.method} at ${date.toLocaleString()}`);
     next();
 })
-
-const {homeRouter} = require('./routes/home-router')
-const {userRouter} = require('./routes/user-router')
-const {profileRouter} = require('./routes/profile-router')
-const {adminRouter} = require('./routes/admin-router')
 
 app.use('/', homeRouter)
 app.use('/user', userRouter);
