@@ -17,7 +17,6 @@ const createAdmin = async (req, res) => {
         }
         // generate hash of the password 
         const hashedPassword = await bcrypt.hash(password, 15);
-        console.log(hashedPassword);
         const admin = new adminModel({
             name,
             about,
