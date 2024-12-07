@@ -12,6 +12,7 @@ const {userRouter} = require('./routes/user-router')
 const {profileRouter} = require('./routes/profile-router')
 const {adminRouter} = require('./routes/admin-router')
 
+// added a rate limiter 
 const limiter = rateLimit({
     windowMs : 15 * 60 * 1000,
     limit: 100,
